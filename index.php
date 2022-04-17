@@ -5,7 +5,7 @@ use \TelegramBot\Bot;
 use \TelegramBot\Components\Router;
 use \TelegramBot\Components\Response;
 
-$bot = new Bot('Your Telegram Token'); //5385707302:AAGbNDnpDsbWCMv7OlRR3UFiRsLoekFe9CQ
+$bot = new Bot('Your Telegram Token');
 if (@$_SERVER['CONTENT_TYPE']===null) {
     $bot::setupWebsocket();
     exit();
