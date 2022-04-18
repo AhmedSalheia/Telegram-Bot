@@ -16,12 +16,7 @@ class Router
 
     public static function initialize()
     {
-        self::input('default.404.response', function () {
-            return Response::sendMessage()->text('Your Command Is Not Found');
-        });
-        self::callback('default.404.response', function () {
-            return Response::sendMessage()->text('Your Command Is Not Found');
-        });
+        self::set404Routes();
 
         $route = Bot::update()->getRoute();
         $type = $route['type'].'s';
@@ -57,5 +52,17 @@ class Router
     {
         $key = str_replace(self::$prefixes['callbacks'],'',$key);
         self::$callbacks[$key] = $value;
+    }
+
+    private static function set404routes()
+    {
+        if (!array_key_exists('default.404.response', self::$inputs))
+            self::input('default.404.response', function () {
+                return Response::sendMessage()->text('Your Command Is Not Found');
+            });
+        if (!array_key_exists('default.404.response', self::$callbacks))
+            self::callback('default.404.response', function () {
+            return Response::sendMessage()->text('Your Command Is Not Found');
+        });
     }
 }
