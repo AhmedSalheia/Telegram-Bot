@@ -2,6 +2,7 @@
     "name": "ahmedsalheia/telegram-bot",
     "description": "This is The Telegram Bot Package I Develop",
     "type": "library",
+    "version": "1.0.0",
     "license": "MIT",
     "autoload": {
         "psr-4": {
