@@ -20,7 +20,7 @@ class Router
 
         $route = Bot::update()->getRoute();
         $type = $route['type'].'s';
-        $key = str_replace(self::$prefixes[$type],'',$route['route']);
+        $key = strtolower(str_replace(self::$prefixes[$type],'',$route['route']));
         if (!array_key_exists($key,self::$$type)) $key = 'default.404.response';
 
         return self::return($key, $type);
@@ -45,12 +45,12 @@ class Router
 
     public static function input($key, \Closure|array|string $value)
     {
-        $key = str_replace(self::$prefixes['inputs'],'',$key);
+        $key = strtolower(str_replace(self::$prefixes['inputs'],'',$key));
         self::$inputs[$key] = $value;
     }
     public static function callback($key, \Closure|array|string $value)
     {
-        $key = str_replace(self::$prefixes['callbacks'],'',$key);
+        $key = strtolower(str_replace(self::$prefixes['callbacks'],'',$key));
         self::$callbacks[$key] = $value;
     }
 
