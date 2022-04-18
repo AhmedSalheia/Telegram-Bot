@@ -53,6 +53,12 @@ class Router
         $key = strtolower(str_replace(self::$prefixes['callbacks'],'',$key));
         self::$callbacks[$key] = $value;
     }
+    public static function any($key, \Closure|array|string $value)
+    {
+        $key = strtolower(str_replace(self::$prefixes['callbacks'],'',$key));
+        self::$inputs[$key] = $value;
+        self::$callbacks[$key] = $value;
+    }
 
     private static function set404routes()
     {
