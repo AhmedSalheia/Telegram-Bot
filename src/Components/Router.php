@@ -16,10 +16,17 @@ class Router
 
     public static function initialize()
     {
+        self::input('default.404.response', function () {
+            return Response::sendMessage()->text('Your Command Is Not Found');
+        });
+        self::callback('default.404.response', function () {
+            return Response::sendMessage()->text('Your Command Is Not Found');
+        });
+
         $route = Bot::update()->getRoute();
         $type = $route['type'].'s';
         $key = str_replace(self::$prefixes[$type],'',$route['route']);
-        if (!array_key_exists($key,self::$$type)) $key = 'start';
+        if (!array_key_exists($key,self::$$type)) $key = 'default.404.response';
 
         return self::return($key, $type);
     }
