@@ -31,7 +31,7 @@ class Bot
 
     public static function setupWebsocket()
     {
-        $ws = json_decode(file_get_contents("https://api.telegram.org/bot".self::$TOKEN."/setWebhook?url=https://" . $_SERVER['HTTP_HOST']));
+        $ws = json_decode(file_get_contents("https://api.telegram.org/bot".self::$TOKEN."/setWebhook?url=https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']));
         if ($ws->ok===false)
             throw new \Exception('Error Setting Websocket');
     }
