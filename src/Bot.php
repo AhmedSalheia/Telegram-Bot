@@ -13,6 +13,7 @@ class Bot
     protected static $bot = null;
     protected static $update = null;
     protected static $router = null;
+    protected static $admins = [];
 
     public function __construct($token="")
     {
@@ -63,6 +64,16 @@ class Bot
         if (self::$router===null)
             self::$router = new Router();
         return self::$router;
+    }
+
+    public function admins(...$admins)
+    {
+        self::$admins = $admins;
+    }
+
+    public function is_admin()
+    {
+        return in_array($this->id(),self::$admins);
     }
 
     public function send($method)
