@@ -73,7 +73,7 @@ class Bot
 
     public function is_admin()
     {
-        return in_array($this->id(),self::$admins);
+        return in_array(($this->update()->message() ?? $this->update()->callback())->from()->id,self::$admins);
     }
 
     public function send($method)
