@@ -66,7 +66,7 @@ class Bot
         return self::$router;
     }
 
-    public function admins(...$admins)
+    protected function admins(...$admins)
     {
         self::$admins = $admins;
     }
