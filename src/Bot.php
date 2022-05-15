@@ -69,6 +69,7 @@ class Bot
     protected function admins(...$admins)
     {
         self::$admins = $admins;
+        return $this;
     }
 
     protected function is_admin()
