@@ -68,8 +68,7 @@ class Bot
 
     protected function admins($admins)
     {
-        throw new \RuntimeException(json_encode($admins));
-        self::$admins = $admins;
+        self::$admins = $admins[0];
         return $this;
     }
 
