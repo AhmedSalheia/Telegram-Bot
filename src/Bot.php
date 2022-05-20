@@ -66,8 +66,9 @@ class Bot
         return self::$router;
     }
 
-    protected function admins(...$admins)
+    protected function admins($admins)
     {
+        throw new \RuntimeException(json_encode($admins));
         self::$admins = $admins;
         return $this;
     }
