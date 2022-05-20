@@ -28,9 +28,9 @@ class Router
         $route = Bot::update()->getRoute();
         $type = $route['type'].'s';
         $key = strtolower(str_replace(self::$prefixes[$type],'',$route['route']));
-        if (!array_key_exists($key,self::$$type) || (($is_admin = Bot::is_admin()) && array_key_exists($key,self::$adminRoutes[$type]))) $key = 'default.404.response';
+        if (!array_key_exists($key,self::$$type)) $key = 'default.404.response';
 
-        return self::return($key, $type, $is_admin);
+        return self::return($key, $type);
     }
     private function getReference(\Closure|array|string $value)
     {
@@ -41,9 +41,9 @@ class Router
             return (new (self::$namespace . $value[0]))->{$value[1]}();
         }
     }
-    private static function return($key, $type, $isAdmin=false)
+    private static function return($key, $type)
     {
-        $return = (new self())->getReference(($isAdmin?(self::$adminRoutes[$type]):(self::$$type))[$key]);
+        $return = (new self())->getReference((self::$$type)[$key]);
         if ($return instanceof Send)
             return $return->execute(false);
         else
@@ -53,25 +53,18 @@ class Router
     public static function input($key, \Closure|array|string $value)
     {
         $key = strtolower(str_replace(self::$prefixes['inputs'],'',$key));
-        if (self::$isAdmin) self::$adminRoutes['inputs'][$key] = $value;
-        else self::$inputs[$key] = $value;
+        self::$inputs[$key] = $value;
     }
     public static function callback($key, \Closure|array|string $value)
     {
         $key = strtolower(str_replace(self::$prefixes['callbacks'],'',$key));
-        if (self::$isAdmin) self::$adminRoutes['callbacks'][$key] = $value;
         self::$callbacks[$key] = $value;
     }
     public static function any($key, \Closure|array|string $value)
     {
         $key = strtolower(str_replace(self::$prefixes['callbacks'],'',$key));
-        if (self::$isAdmin) {
-            self::$adminRoutes['inputs'][$key] = $value;
-            self::$adminRoutes['callbacks'][$key] = $value;
-        }else{
-            self::$inputs[$key] = $value;
-            self::$callbacks[$key] = $value;
-        }
+        self::$inputs[$key] = $value;
+        self::$callbacks[$key] = $value;
     }
 
     public static function admin(\Closure $routes)
