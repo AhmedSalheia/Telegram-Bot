@@ -8,6 +8,8 @@ class Router
 {
     protected static $inputs = [];
     protected static $callbacks = [];
+    protected static $steps = [];
+    protected static $step = '';
     protected static $adminRoutes = [
         'inputs' => [],
         'callbacks'=> []
@@ -28,7 +30,9 @@ class Router
         $route = Bot::update()->getRoute();
         $type = $route['type'].'s';
         $key = strtolower(str_replace(self::$prefixes[$type],'',$route['route']));
-        if (!array_key_exists($key,self::$$type)) $key = 'default.404.response';
+        if (!array_key_exists($key,self::$$type))
+            if (($key = self::$step) !== '' && !empty($key) && array_key_exists($key, self::$steps)) $type = 'steps';
+            else $key = 'default.404.response';
 
         return self::return($key, $type);
     }
@@ -65,6 +69,17 @@ class Router
         $key = strtolower(str_replace(self::$prefixes['callbacks'],'',$key));
         self::$inputs[$key] = $value;
         self::$callbacks[$key] = $value;
+    }
+
+    public static function getStepFrom($stepFrom)
+    {
+        self::$step = $stepFrom;
+    }
+
+    public static function step($key, \Closure|array|string $value)
+    {
+        $key = strtolower(str_replace(self::$prefixes['callbacks'],'',$key));
+        self::$steps[$key] = $value;
     }
 
     public static function admin(\Closure $routes)
