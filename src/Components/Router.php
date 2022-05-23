@@ -24,17 +24,29 @@ class Router
 
     public static function initialize()
     {
-        self::set404Routes();
+        self::fallbackRoutes();
 
-        $is_admin = false;
         $route = Bot::update()->getRoute();
         $type = $route['type'].'s';
         $key = strtolower(str_replace(self::$prefixes[$type],'',$route['route']));
         if (!array_key_exists($key,self::$$type))
             if (($key = self::$step) !== '' && !empty($key) && array_key_exists($key, self::$steps)) $type = 'steps';
-            else $key = 'default.404.response';
+            else $key = 'fallback.404';
 
         return self::return($key, $type);
+    }
+    private static function return($key, $type)
+    {
+        $ref = (self::$$type)[$key];
+        if (!$ref['admin'] || (Bot::is_admin()))
+        {
+            $return = (new self())->getReference($ref);
+            if ($return instanceof Send)
+                return $return->execute(false);
+            else
+                return $return;
+        }
+        return self::return('fallback.403', ($type === 'steps') ? 'inputs' : $type);
     }
     private function getReference(\Closure|array|string $value)
     {
@@ -45,59 +57,68 @@ class Router
             return (new (self::$namespace . $value[0]))->{$value[1]}();
         }
     }
-    private static function return($key, $type)
-    {
-        $return = (new self())->getReference((self::$$type)[$key]);
-        if ($return instanceof Send)
-            return $return->execute(false);
-        else
-            return $return;
-    }
-
-    public static function input($key, \Closure|array|string $value)
-    {
-        $key = strtolower(str_replace(self::$prefixes['inputs'],'',$key));
-        self::$inputs[$key] = $value;
-    }
-    public static function callback($key, \Closure|array|string $value)
-    {
-        $key = strtolower(str_replace(self::$prefixes['callbacks'],'',$key));
-        self::$callbacks[$key] = $value;
-    }
-    public static function any($key, \Closure|array|string $value)
-    {
-        $key = strtolower(str_replace(self::$prefixes['callbacks'],'',$key));
-        self::$inputs[$key] = $value;
-        self::$callbacks[$key] = $value;
-    }
-
     public static function getStepFrom($stepFrom)
     {
         self::$step = $stepFrom;
     }
-
+    public static function input($key, \Closure|array|string $value)
+    {
+        $key = strtolower(str_replace(self::$prefixes['inputs'],'',$key));
+        $admin=str_starts_with($key, 'admin.');
+        $key = str_replace('admin.', '', $key);
+        self::$inputs[$key]['value'] = $value;
+        self::$inputs[$key]['admin'] = $admin;
+    }
+    public static function callback($key, \Closure|array|string $value)
+    {
+        $key = strtolower(str_replace(self::$prefixes['callbacks'],'',$key));
+        $admin=str_starts_with($key, 'admin.');
+        $key = str_replace('admin.', '', $key);
+        self::$callbacks[$key]['value'] = $value;
+        self::$callbacks[$key]['admin'] = $admin;
+    }
+    public static function any($key, \Closure|array|string $value)
+    {
+        $key = strtolower(str_replace(self::$prefixes['callbacks'],'',$key));
+        $admin=str_starts_with($key, 'admin.');
+        $key = str_replace('admin.', '', $key);
+        self::$inputs[$key]['value'] = $value;
+        self::$inputs[$key]['admin'] = $admin;
+        self::$callbacks[$key]['value'] = $value;
+        self::$callbacks[$key]['admin'] = $admin;
+    }
     public static function step($key, \Closure|array|string $value)
     {
         $key = strtolower(str_replace(self::$prefixes['callbacks'],'',$key));
-        self::$steps[$key] = $value;
+        $admin=str_starts_with($key, 'admin.');
+        $key = str_replace('admin.', '', $key);
+        self::$steps[$key]['value'] = $value;
+        self::$steps[$key]['admin'] = $admin;
     }
 
-    public static function admin(\Closure $routes)
-    {
-        self::$isAdmin = true;
-        $routes();
-        self::$isAdmin = false;
+    private static function fallbackRoutes(){
+        self::set404Routes();
     }
-
     private static function set404routes()
     {
-        if (!array_key_exists('default.404.response', self::$inputs))
-            self::input('default.404.response', function () {
+        if (!array_key_exists('fallback.404', self::$inputs))
+            self::input('fallback.404', function () {
                 return Response::sendMessage()->text('Your Command Is Not Found');
             });
-        if (!array_key_exists('default.404.response', self::$callbacks))
-            self::callback('default.404.response', function () {
+        if (!array_key_exists('fallback.404', self::$callbacks))
+            self::callback('fallback.404', function () {
             return Response::sendMessage()->text('Your Command Is Not Found');
         });
+    }
+    private static function set403routes()
+    {
+        if (!array_key_exists('fallback.403', self::$inputs))
+            self::input('fallback.403', function () {
+                return Response::sendMessage()->text('You Don\'t Have Permission To Do So');
+            });
+        if (!array_key_exists('fallback.403', self::$callbacks))
+            self::callback('fallback.403', function () {
+                return Response::sendMessage()->text('You Don\'t Have Permission To Do So');
+            });
     }
 }
