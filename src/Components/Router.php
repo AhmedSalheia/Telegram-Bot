@@ -93,6 +93,7 @@ class Router
 
     private static function fallbackRoutes(){
         self::set404Routes();
+        self::set403Routes();
     }
     private static function set404routes()
     {
