@@ -60,7 +60,9 @@ class Send
     public function keyboard_btn_grid_row(...$rows)
     {
         foreach ($rows as $row)
-            if (!isset($row['if']) || $row['if']) {
+            if (!isset($row['if']))
+                $this->reply_markup['inline_keyboard'][] = $row;
+            elseif($row['if']) {
                 unset($row['if']);
                 $this->reply_markup['inline_keyboard'][] = $row;
             }
