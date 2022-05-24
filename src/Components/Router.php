@@ -40,7 +40,7 @@ class Router
         $ref = (self::$$type)[$key];
         if (!$ref['admin'] || (Bot::is_admin()))
         {
-            $return = (new self())->getReference($ref);
+            $return = (new self())->getReference($ref['value']);
             if ($return instanceof Send)
                 return $return->execute(false);
             else
