@@ -57,16 +57,23 @@ class Send
         $this->reply_markup['inline_keyboard'] = $grid;
         return $this;
     }
+    private function keyboard_btn_grid_row_add($row, $index=null){
+        if (!isset($row['if']) || $row['if']) {
+            if (isset($row['if'])) unset($row['if']);
+            if ($index!==null) $this->reply_markup['inline_keyboard'][$index][] = $row;
+            else $this->reply_markup['inline_keyboard'][][] = $row;
+        }
+    }
     public function keyboard_btn_grid_row(...$rows)
     {
         foreach ($rows as $row)
-            if (!isset($row['if']))
-                $this->reply_markup['inline_keyboard'][] = $row;
-            elseif($row['if']) {
-                unset($row['if']);
-                $this->reply_markup['inline_keyboard'][] = $row;
+            if (!isset($row[0]) || !is_array($row[0]))
+                $this->keyboard_btn_grid_row_add($row);
+            else {
+                $index = count($this->reply_markup['inline_keyboard']);
+                foreach ($row as $r)
+                    $this->keyboard_btn_grid_row_add($r,$index);
             }
-
         return $this;
     }
 
