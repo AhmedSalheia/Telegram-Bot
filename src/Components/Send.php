@@ -57,10 +57,12 @@ class Send
         $this->reply_markup['inline_keyboard'] = $grid;
         return $this;
     }
-    public function keyboard_btn_grid_row(...$row)
+    public function keyboard_btn_grid_row(...$rows)
     {
-        if (!isset($row['if']) || $row['if'])
-            $this->reply_markup['inline_keyboard'][] = $row;
+        foreach ($rows as $row)
+            if (!isset($row['if']) || $row['if'])
+                $this->reply_markup['inline_keyboard'][] = $row;
+
         return $this;
     }
 
