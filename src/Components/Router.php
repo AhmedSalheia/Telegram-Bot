@@ -61,37 +61,32 @@ class Router
     {
         self::$step = $stepFrom;
     }
+    private static function getKey($key, $prefixes, &$admin)
+    {
+        $key = strtolower(str_replace($prefixes,'',$key));
+        $admin=str_starts_with($key, 'admin.');
+        return  str_replace('admin.', '', $key);
+    }
     public static function input($key, \Closure|array|string $value)
     {
-        $key = strtolower(str_replace(self::$prefixes['inputs'],'',$key));
-        $admin=str_starts_with($key, 'admin.');
-        $key = str_replace('admin.', '', $key);
+        $key = self::getKey($key, self::$prefixes['inputs'], $admin);
         self::$inputs[$key]['value'] = $value;
         self::$inputs[$key]['admin'] = $admin;
     }
     public static function callback($key, \Closure|array|string $value)
     {
-        $key = strtolower(str_replace(self::$prefixes['callbacks'],'',$key));
-        $admin=str_starts_with($key, 'admin.');
-        $key = str_replace('admin.', '', $key);
+        $key = self::getKey($key, self::$prefixes['callbacks'], $admin);
         self::$callbacks[$key]['value'] = $value;
         self::$callbacks[$key]['admin'] = $admin;
     }
     public static function any($key, \Closure|array|string $value)
     {
-        $key = strtolower(str_replace(self::$prefixes['callbacks'],'',$key));
-        $admin=str_starts_with($key, 'admin.');
-        $key = str_replace('admin.', '', $key);
-        self::$inputs[$key]['value'] = $value;
-        self::$inputs[$key]['admin'] = $admin;
-        self::$callbacks[$key]['value'] = $value;
-        self::$callbacks[$key]['admin'] = $admin;
+        self::input($key, $value);
+        self::callback($key, $value);
     }
     public static function step($key, \Closure|array|string $value)
     {
-        $key = strtolower(str_replace(self::$prefixes['callbacks'],'',$key));
-        $admin=str_starts_with($key, 'admin.');
-        $key = str_replace('admin.', '', $key);
+        $key = self::getKey($key, '', $admin);
         self::$steps[$key]['value'] = $value;
         self::$steps[$key]['admin'] = $admin;
     }
