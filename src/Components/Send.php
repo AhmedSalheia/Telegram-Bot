@@ -102,11 +102,11 @@ class Send
         if (curl_error($ch)) {
             var_dump(curl_error($ch));
         }
-        $res = json_decode($res, false)->result;
+        $res = json_decode($res, false);
         if ($return)
-            return $res;
-
-        (Router::$updateLastMessage)($res);
+            return $res->result;
+        if (isset($res->result) && isset($res->result->message_id))
+            (Router::$updateLastMessage)($res->result->message_id);
 
         return;
     }
