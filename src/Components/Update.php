@@ -25,7 +25,7 @@ class Update
     {
         return ($this->message!==null)?
             ['type'=>'input','route'=>$this->message()->text()]:
-            ['type'=>'callback','route'=>'hi'];
+            ['type'=>'callback','route'=>$this->callback()->data()];
     }
     public function getChatId()
     {
