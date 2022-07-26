@@ -102,8 +102,12 @@ class Send
         if (curl_error($ch)) {
             var_dump(curl_error($ch));
         }
+        $res = json_decode($res, false)->result;
         if ($return)
-            return json_decode($res, false)->result;
+            return $res;
+
+        (Router::$updateLastMessage)($res);
+
         return;
     }
 }

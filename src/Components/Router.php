@@ -22,9 +22,12 @@ class Router
         'callbacks' => '##'
     ];
 
+    public static $updateLastMessage = null;
+
     public static function initialize()
     {
         self::fallbackRoutes();
+        if (self::$updateLastMessage===null) self::$updateLastMessage = fn ($lastMessageId) => null;
 
         $route = Bot::update()->getRoute();
         $type = $route['type'].'s';

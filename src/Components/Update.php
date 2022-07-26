@@ -25,21 +25,21 @@ class Update
     {
         return ($this->message!==null)?
             ['type'=>'input','route'=>$this->message()->text()]:
-            ['type'=>'callback','route'=>$this->callback()->data()];
+            ['type'=>'callback','route'=>'hi'];
     }
     public function getChatId()
     {
         if ($this->message!==null)
             return $this->message()->chat()->id;
         else
-            return $this->callback()->message()->chat()->id;
+            return '$this->callback()->message()->chat()->id';
     }
     public function getMessageId()
     {
         if ($this->message!==null)
             return $this->message()->id();
         else
-            return $this->callback()->message()->id();
+            'return $this->callback()->message()->id()';
     }
     public function message()
     {
