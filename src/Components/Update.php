@@ -32,14 +32,14 @@ class Update
         if ($this->message!==null)
             return $this->message()->chat()->id;
         else
-            return '$this->callback()->message()->chat()->id';
+            return $this->callback()->message()->chat()->id;
     }
     public function getMessageId()
     {
         if ($this->message!==null)
             return $this->message()->id();
         else
-            'return $this->callback()->message()->id()';
+            return $this->callback()->message()->id();
     }
     public function message()
     {
