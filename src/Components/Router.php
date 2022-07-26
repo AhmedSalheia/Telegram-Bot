@@ -24,12 +24,12 @@ class Router
 
     public static $updateLastMessage = null;
 
-    public static function initialize()
+    public static function initialize($route=[])
     {
         self::fallbackRoutes();
         if (self::$updateLastMessage===null) self::$updateLastMessage = fn ($lastMessageId) => null;
 
-        $route = Bot::update()->getRoute();
+        if ($route === []) $route = Bot::update()->getRoute();
         $type = $route['type'].'s';
         $key = strtolower(str_replace(self::$prefixes[$type],'',$route['route']));
         if (!array_key_exists($key,self::$$type))
