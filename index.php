@@ -11,7 +11,7 @@ if (@$_SERVER['CONTENT_TYPE']===null) {
     exit();
 }
 
-Router::input('/start::id?::',function ($id) use ($bot){
+Router::input('/start',function ($id) use ($bot){
     // inside the input use {{$bot->update()->message()}} to get your message data...
     $text = "Hi ".$bot->update()->message()->from()->username." Your ID is: ".$bot->update()->message()->from()->id;
     return Response::sendMessage()->text($text);
