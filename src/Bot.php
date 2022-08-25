@@ -98,7 +98,7 @@ class Bot
                 'chat_id'   =>  $id
             ]);
             if ($q->ok !== false)
-                return route('input.fallback_required_channels');
+                return Router::respondWithRoute('input.fallback_required_channels');
         }
         return true;
     }
@@ -111,14 +111,5 @@ class Bot
     public function send($method, $args=[])
     {
         return new Send($method,$args);
-    }
-}
-
-// Functions
-if (!function_exists('route'))
-{
-    function route($route) {
-        $route = explode('.', $route);
-        return \TelegramBot\Components\Router::initialize(['type'=>$route[0],'route'=>$route[1], 'args'=>array_slice($route,2)]);
     }
 }
