@@ -22,7 +22,7 @@ class Update
         if (isset($this->update->callback_query))
             $this->callback = new CallbackQuery($this->update->callback_query);
 
-        $this->user = new User((array)($this->message??$this->callback->message())->from());
+        $this->user = new User((array)($this->message??$this->callback)->from());
     }
 
     public function getRoute()
