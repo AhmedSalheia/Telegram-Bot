@@ -15,6 +15,8 @@ class Send
     private $reply_markup = [
         "inline_keyboard" => [],
     ];
+    private $callback_query_id = null;
+    private $show_alert = true;
 
     public function __construct($method,$args=[])
     {
@@ -88,7 +90,10 @@ class Send
             "text" => $this->text,
             "parse_mode" => $this->parse_mode,
             'disable_web_page_preview' => $this->disable_web_page_preview,
-            "reply_markup" => json_encode($this->reply_markup)
+            "reply_markup" => json_encode($this->reply_markup),
+
+            'callback_query_id' =>  $this->callback_query_id,
+            'show_alert' => $this->show_alert
         ];
     }
 

@@ -7,6 +7,11 @@ class CallbackQuery
     private $callback_query;
     private $message=null;
 
+    public function __get(string $name)
+    {
+        return (!in_array($name,get_class_vars(self::class)))?$this->callback_query->$name:$this->$name;
+    }
+
     public function __construct($callback_query)
     {
         $this->callback_query = $callback_query;
@@ -14,7 +19,7 @@ class CallbackQuery
     }
     public function from()
     {
-        return $this->callback_query->from;
+        return $this->from;
     }
     public function message()
     {
@@ -22,6 +27,6 @@ class CallbackQuery
     }
     public function data()
     {
-        return $this->callback_query->data;
+        return $this->data;
     }
 }
