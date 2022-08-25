@@ -97,7 +97,7 @@ class Bot
                 'user_id'   =>  $this->update()->getChatId(),
                 'chat_id'   =>  $id
             ]);
-            if ($q->ok !== false)
+            if ($q->ok === false)
                 return Router::respondWithRoute('input.fallback_required_channels');
         }
         return true;
