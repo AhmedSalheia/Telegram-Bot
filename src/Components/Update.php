@@ -50,6 +50,10 @@ class Update
     {
         return $this->message;
     }
+    public function user()
+    {
+        return $this->user;
+    }
     public function callback()
     {
         return $this->callback;
