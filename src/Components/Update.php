@@ -23,7 +23,7 @@ class Update
 
     public function getRoute()
     {
-        $data = explode(' ',$this->message()->text()??$this->callback()->data(), 2);
+        $data = explode(' ',$this->message()?->text()??$this->callback()?->data(), 2);
         return ($this->message!==null)?
             ['type'=>'input','route'=>array_shift($data), 'args'=>$data]:
             ['type'=>'callback','route'=>array_shift($data), 'args'=>$data];
