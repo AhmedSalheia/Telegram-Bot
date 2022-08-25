@@ -6,8 +6,6 @@ use TelegramBot\Components\Send;
 use TelegramBot\Components\Update;
 use TelegramBot\Components\Router;
 
-require 'helpers/functions.php';
-
 class Bot
 {
     public static $TOKEN;
@@ -113,5 +111,14 @@ class Bot
     public function send($method, $args=[])
     {
         return new Send($method,$args);
+    }
+}
+
+// Functions
+if (!function_exists('route'))
+{
+    function route($route) {
+        $route = explode('.', $route);
+        return \TelegramBot\Components\Router::initialize(['type'=>$route[0],'route'=>$route[1], 'args'=>array_slice($route,2)]);
     }
 }
