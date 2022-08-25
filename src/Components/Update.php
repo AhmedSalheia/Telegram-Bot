@@ -4,12 +4,14 @@ namespace TelegramBot\Components;
 
 use TelegramBot\Components\Update\CallbackQuery;
 use TelegramBot\Components\Update\Message;
+use TelegramBot\Components\Update\User;
 
 class Update
 {
     protected $update = null;
     protected $message = null;
     protected $callback = null;
+    protected $user = null;
 
     public function __construct()
     {
@@ -19,6 +21,8 @@ class Update
 
         if (isset($this->update->callback_query))
             $this->callback = new CallbackQuery($this->update->callback_query);
+
+        $this->user = new User((array)($this->message??$this->callback->message())->from());
     }
 
     public function getRoute()
