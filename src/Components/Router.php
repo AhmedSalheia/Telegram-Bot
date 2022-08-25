@@ -37,7 +37,7 @@ class Router
             if (($key = self::$step) !== '' && !empty($key) && array_key_exists($key, self::$steps)) $type = 'steps';
             else $key = 'fallback_404';
 
-        return self::return($key, $type, $params);
+        return self::return($key, $type, array_merge($route['args'],$params));
     }
     private static function return($key, $type, $params=[])
     {
