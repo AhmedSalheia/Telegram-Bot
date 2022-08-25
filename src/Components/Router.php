@@ -35,7 +35,7 @@ class Router
         $key = array_shift($params);
         if (!array_key_exists($key,self::$$type))
             if (($key = self::$step) !== '' && !empty($key) && array_key_exists($key, self::$steps)) $type = 'steps';
-            else $key = 'fallback.404';
+            else $key = 'fallback_404';
 
         return self::return($key, $type, $params);
     }
@@ -48,7 +48,7 @@ class Router
             {
                 if ($v = array_shift($params))
                     $paramValues[$param] = $v;
-                elseif (!$optional) return self::return('fallback.404', ($type === 'steps') ? 'inputs' : $type);
+                elseif (!$optional) return self::return('fallback_404', ($type === 'steps') ? 'inputs' : $type);
                 else $paramValues[$param] = null;
             }
 
@@ -60,7 +60,7 @@ class Router
             else
                 return $return;
         }
-        return self::return('fallback.403', ($type === 'steps') ? 'inputs' : $type);
+        return self::return('fallback_403', ($type === 'steps') ? 'inputs' : $type);
     }
     private function getReference(\Closure|array|string $value, $params)
     {
@@ -121,27 +121,42 @@ class Router
     private static function fallbackRoutes(){
         self::set404Routes();
         self::set403Routes();
+        self::channelFallbacks();
     }
     private static function set404routes()
     {
-        if (!array_key_exists('fallback.404', self::$inputs))
-            self::input('fallback.404', function () {
+        if (!array_key_exists('fallback_404', self::$inputs))
+            self::input('fallback_404', function () {
                 return Response::sendMessage()->text('Your Command Is Not Found');
             });
-        if (!array_key_exists('fallback.404', self::$callbacks))
-            self::callback('fallback.404', function () {
+        if (!array_key_exists('fallback_404', self::$callbacks))
+            self::callback('fallback_404', function () {
             return Response::sendMessage()->text('Your Command Is Not Found');
         });
     }
     private static function set403routes()
     {
-        if (!array_key_exists('fallback.403', self::$inputs))
-            self::input('fallback.403', function () {
+        if (!array_key_exists('fallback_403', self::$inputs))
+            self::input('fallback_403', function () {
                 return Response::sendMessage()->text('You Don\'t Have Permission To Do So');
             });
-        if (!array_key_exists('fallback.403', self::$callbacks))
-            self::callback('fallback.403', function () {
+        if (!array_key_exists('fallback_403', self::$callbacks))
+            self::callback('fallback_403', function () {
                 return Response::sendMessage()->text('You Don\'t Have Permission To Do So');
+            });
+    }
+    private static function channelFallbacks()
+    {
+        $message = "You Need To Follow This Channels First:\n";
+        foreach (Bot::$channels as $username=>$id) $message .= "- @$username\n";
+
+        if (!array_key_exists('fallback_required_channels', self::$inputs))
+            self::input('fallback_required_channels', function () use ($message) {
+                return Response::sendMessage()->text($message);
+            });
+        if (!array_key_exists('fallback_required_channels', self::$callbacks))
+            self::callback('fallback_required_channels', function () use ($message) {
+                return Response::sendMessage()->text($message);
             });
     }
 }

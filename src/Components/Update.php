@@ -23,9 +23,10 @@ class Update
 
     public function getRoute()
     {
+        $data = explode(' ',$this->message()->text()??$this->callback()->data(), 2);
         return ($this->message!==null)?
-            ['type'=>'input','route'=>$this->message()->text()]:
-            ['type'=>'callback','route'=>$this->callback()->data()];
+            ['type'=>'input','route'=>array_shift($data), 'args'=>$data]:
+            ['type'=>'callback','route'=>array_shift($data), 'args'=>$data];
     }
     public function getChatId()
     {

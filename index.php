@@ -5,13 +5,17 @@ use \TelegramBot\Bot;
 use \TelegramBot\Components\Router;
 use \TelegramBot\Components\Response;
 
-$bot = new Bot('5362393291:AAFUDrCFU_yvq6QJN20eujyOZgAeHIqdbiE');
+$bot = (new Bot('5362393291:AAFUDrCFU_yvq6QJN20eujyOZgAeHIqdbiE'))->channels([
+    'ahmedtryjoinbotshitthings' => -1001552170803,
+]);
+
 if (@$_SERVER['CONTENT_TYPE']===null) {
     $bot::setupWebsocket();
     exit();
 }
+if($bot->checkChannels() !== true) exit();
 
-Router::input('/start',function ($id) use ($bot){
+Router::input('/start',function () use ($bot){
     // inside the input use {{$bot->update()->message()}} to get your message data...
     $text = "Hi ".$bot->update()->message()->from()->username." Your ID is: ".$bot->update()->message()->from()->id;
     return Response::sendMessage()->text($text);

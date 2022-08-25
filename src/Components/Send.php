@@ -92,19 +92,23 @@ class Send
         ];
     }
 
-    public function execute($return=true)
+    public function execute($return=true, $data=true)
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, "https://api.telegram.org/bot" . Bot::$TOKEN . "/" . $this->method);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $this->generateData());
+        curl_setopt($ch, CURLOPT_POSTFIELDS, (!$data)?:$this->generateData());
         $res = curl_exec($ch);
         if (curl_error($ch)) {
             var_dump(curl_error($ch));
         }
         $res = json_decode($res, false);
-        if ($return)
+
+        if ($return==='all')
+            return $res;
+        elseif ($return)
             return $res->result;
+
         if (isset($res->result) && isset($res->result->message_id))
             (Router::$updateLastMessage)($res->result->message_id);
 
