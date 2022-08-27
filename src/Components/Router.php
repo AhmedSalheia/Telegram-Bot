@@ -154,11 +154,11 @@ class Router
     private static function channelFallbacks()
     {
         $message = "You Need To Follow This Channel First:\n";
-        if (!array_key_exists('fallback_required_channels::channel::', self::$inputs))
+        if (!array_key_exists('fallback_required_channels', self::$inputs))
             self::input('fallback_required_channels::channel::', function ($channel) use ($message) {
                 return Response::sendMessage()->text($message."\n- @".$channel);
             });
-        if (!array_key_exists('fallback_required_channels::channel::', self::$callbacks))
+        if (!array_key_exists('fallback_required_channels', self::$callbacks))
             self::callback('fallback_required_channels::channel::', function ($channel) use ($message) {
                 return Response::sendMessage()->text($message."\n- @".$channel);
             });
