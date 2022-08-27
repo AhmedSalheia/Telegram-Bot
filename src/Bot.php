@@ -98,7 +98,7 @@ class Bot
                 'chat_id'   =>  $id
             ]);
             if ($q->ok === false)
-                return Router::respondWithRoute('input.fallback_required_channels');
+                return Router::respondWithRoute('input.fallback_required_channels.'.$username);
         }
         return true;
     }

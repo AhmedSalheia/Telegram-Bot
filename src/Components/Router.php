@@ -153,16 +153,14 @@ class Router
     }
     private static function channelFallbacks()
     {
-        $message = "You Need To Follow This Channels First:\n";
-        foreach (Bot::$channels as $username=>$id) $message .= "- @$username\n";
-
-        if (!array_key_exists('fallback_required_channels', self::$inputs))
-            self::input('fallback_required_channels', function () use ($message) {
-                return Response::sendMessage()->text($message);
+        $message = "You Need To Follow This Channel First:\n";
+        if (!array_key_exists('fallback_required_channels::channel::', self::$inputs))
+            self::input('fallback_required_channels::channel::', function ($channel) use ($message) {
+                return Response::sendMessage()->text($message."\n- @".$channel);
             });
-        if (!array_key_exists('fallback_required_channels', self::$callbacks))
-            self::callback('fallback_required_channels', function () use ($message) {
-                return Response::sendMessage()->text($message);
+        if (!array_key_exists('fallback_required_channels::channel::', self::$callbacks))
+            self::callback('fallback_required_channels::channel::', function ($channel) use ($message) {
+                return Response::sendMessage()->text($message."\n- @".$channel);
             });
     }
 
