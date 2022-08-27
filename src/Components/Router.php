@@ -31,8 +31,8 @@ class Router
 
         if ($route === []) $route = Bot::update()->getRoute();
         $type = $route['type'].'s';
-        $params = explode(' ',strtolower(str_replace(self::$prefixes[$type],'',$route['route'])));
-        $key = array_shift($params);
+        $params = $route['args'];
+        $key = str_replace(self::$prefixes[$type],'',$route['route']);
         if (!array_key_exists($key,self::$$type))
             if (($key = self::$step) !== '' && !empty($key) && array_key_exists($key, self::$steps)) $type = 'steps';
             else $key = 'fallback_404';
@@ -48,7 +48,7 @@ class Router
             {
                 if ($v = array_shift($params))
                     $paramValues[$param] = $v;
-                elseif (!$optional) return self::return('fallback_404', ($type === 'steps') ? 'inputs' : $type);
+                elseif (!$optional) throw new \Exception(json_encode([$param, $key,$ref,$params]));
                 else $paramValues[$param] = null;
             }
 
@@ -131,8 +131,8 @@ class Router
             });
         if (!array_key_exists('fallback_404', self::$callbacks))
             self::callback('fallback_404', function () {
-            return Response::sendMessage()->text('Your Command Is Not Found');
-        });
+                return Response::sendMessage()->text('Your Command Is Not Found');
+            });
     }
     private static function set403routes()
     {

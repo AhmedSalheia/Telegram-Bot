@@ -41,7 +41,7 @@ class Bot
     public function me()
     {
         if (self::$bot === null)
-            self::$bot = $this->send('getme')->execute();
+            self::$bot = self::query('getme')->result;
         return self::$bot;
     }
     public function name()
