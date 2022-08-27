@@ -34,10 +34,16 @@ class Router
         $params = $route['args'];
         $key = str_replace(self::$prefixes[$type],'',$route['route']);
         if (!array_key_exists($key,self::$$type))
-            if (($key = self::$step) !== '' && !empty($key) && array_key_exists($key, self::$steps)) $type = 'steps';
-            else $key = 'fallback_404';
+            if (($key = self::$step) !== '' && !empty($key)) {
+                $k = explode(' ', $key);
+                $key = array_shift($k);
+                if (array_key_exists($key, self::$steps)) {
+                    $params = $k;
+                    $type = 'steps';
+                }else $key = 'fallback_404';
+            }else $key = 'fallback_404';
 
-        return self::return($key, $type, array_merge($route['args'],$params));
+        return self::return($key, $type, $params);
     }
     private static function return($key, $type, $params=[])
     {
@@ -48,7 +54,7 @@ class Router
             {
                 if ($v = array_shift($params))
                     $paramValues[$param] = $v;
-                elseif (!$optional) throw new \Exception(json_encode([$param, $key,$ref,$params]));
+                elseif (!$optional) return self::return('fallback_404', ($type === 'steps') ? 'inputs' : $type);
                 else $paramValues[$param] = null;
             }
 
