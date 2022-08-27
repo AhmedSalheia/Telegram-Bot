@@ -105,7 +105,7 @@ class Bot
 
     protected static function query($method, $queryData=[])
     {
-        return (new self)->send($method.'?'.http_build_query($queryData),['chat_id'=>'chat_id','message_id'=>'message_id'])->execute('all',false);
+        return (new self)->send($method.'?'.http_build_query($queryData),['chat_id'=>$queryData['chat_id']??'chat_id','message_id'=>$queryData['message_id']??'message_id'])->execute('all',false);
     }
 
     public function send($method, $args=[])
